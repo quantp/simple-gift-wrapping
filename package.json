@@ -1,0 +1,17 @@
+{
+  "name": "simple-gift-wrapping",
+  "version": "1.0.0",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "tw:build": "npx @tailwindcss/cli -i tailwind.input.css -o assets/gift-wrapping.css --minify",
+    "tw:watch": "npx @tailwindcss/cli -i tailwind.input.css -o assets/gift-wrapping.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.1",
+    "tailwindcss": "^4.2.1"
+  }
+}

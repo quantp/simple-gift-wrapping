@@ -1,0 +1,248 @@
+@import "tailwindcss" prefix(tw);
+
+@source "./snippets/gift-wrapping-form.liquid";
+@source "./snippets/cart-drawer.liquid";
+@source "./assets/gift-wrapping.js";
+
+:root {
+  --color-error: 220 38 38;
+}
+
+[hidden] { display: none !important; }
+
+.gift-wrapping-pdp__form .field:after,
+.gift-wrapping-pdp__form .field:before {
+  display: none;
+}
+
+.gift-wrapping-pdp__form .field .field__input {
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
+
+.gift-wrapping-pdp__form .field {
+  border: solid 0.1rem rgba(var(--color-foreground), 0.12);
+  box-shadow: none;
+  outline: none;
+}
+
+.gift-wrapping-pdp__form  .field.field__input--error {
+  border-color: rgb(var(--color-error));
+}
+
+/* ============================================
+   PDP - Custom Element
+   ============================================ */
+
+gift-wrapping-pdp {
+  display: block;
+}
+
+.gift-wrapping-pdp__checkbox {
+  accent-color: rgb(var(--color-button));
+  border: 1.5px solid rgba(var(--color-foreground), 0.4);
+  border-radius: var(--inputs-radius, 4px);
+  margin: 0;
+}
+
+/* Toggle container */
+gift-wrapping-pdp > .gift-wrapping-pdp__toggler {
+  padding: 1rem 1.2rem;
+  border: 1px solid rgba(var(--color-foreground), 0.15);
+  border-radius: var(--inputs-radius, 4px);
+  background: rgba(var(--color-foreground), 0.02);
+  transition: border-color 0.2s;
+}
+
+gift-wrapping-pdp > .gift-wrapping-pdp__toggler:hover {
+  border-color: rgba(var(--color-foreground), 0.3);
+}
+
+/* Form panel */
+.gift-wrapping-pdp__form {
+  padding: 1.6rem;
+  border: 1px solid rgba(var(--color-foreground), 0.12);
+  border-radius: var(--inputs-radius, 4px);
+  background: rgba(var(--color-foreground), 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+/* ============================================
+   Char counter
+   ============================================ */
+
+.gw-char-count {
+  font-size: 1.1rem;
+  color: rgba(var(--color-foreground), 0.5);
+  transition: color 0.15s;
+  position: absolute;
+  top: 3px;
+  right: 5px;
+}
+
+.gw-char-count.at-limit {
+  color: rgb(var(--color-error));
+}
+
+/* ============================================
+   Cart Drawer - Table structure overrides
+   ============================================ */
+
+.cart-item--gift-wrap {
+  display: block;
+  background: transparent;
+}
+
+.cart-drawer .cart-item.cart-item--gift-wrap {
+  display: block;
+}
+
+.cart-items td.cart-item__gift-wrap-cell {
+  padding: 0;
+  border-top: none;
+  width: 100%;
+  display: block;
+}
+
+/* ============================================
+   Cart Drawer - Gift wrap container
+   ============================================ */
+
+.cart-gift-wrap {
+  padding: 0.8rem 1.6rem 1.2rem;
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.12);
+  position: relative;
+  min-height: 3.6rem;
+}
+
+.cart-gift-wrap__summary {
+  color: rgba(var(--color-foreground), 0.75);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.cart-gift-wrap__edit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  color: rgba(var(--color-foreground), 0.7);
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.cart-gift-wrap__edit-btn:hover {
+  color: rgba(var(--color-foreground), 1);
+}
+
+/* ============================================
+   Cart Drawer - Edit form buttons
+   ============================================ */
+
+.cart-gift-wrap__cancel-btn,
+.cart-gift-wrap__update-btn {
+  font-size: 1.3rem;
+  padding: 0.6rem 1.2rem;
+  min-height: auto;
+  height: auto;
+  border-radius: var(--buttons-radius, 4px);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.cart-gift-wrap__cancel-btn {
+  background: transparent;
+  color: rgba(var(--color-foreground), 0.7);
+  border: 1px solid rgba(var(--color-foreground), 0.2);
+  transition: background 0.2s;
+}
+
+.cart-gift-wrap__cancel-btn:hover {
+  background: rgba(var(--color-foreground), 0.05);
+}
+
+.cart-gift-wrap__update-btn {
+  background: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+  border: 1px solid rgb(var(--color-button));
+  transition: opacity 0.2s;
+}
+
+.cart-gift-wrap__update-btn:hover {
+  opacity: 0.85;
+}
+
+/* ============================================
+   Skeleton loading state
+   ============================================ */
+
+.cart-gift-wrap__skeleton {
+  display: none;
+  padding: 0.2rem 0;
+}
+
+.cart-gift-wrap__skeleton-line {
+  height: 1.2rem;
+  border-radius: 0.4rem;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--color-foreground), 0.06) 25%,
+    rgba(var(--color-foreground), 0.12) 50%,
+    rgba(var(--color-foreground), 0.06) 75%
+  );
+  background-size: 200% 100%;
+  animation: gift-wrap-shimmer 1.4s infinite ease-in-out;
+  width: 70%;
+}
+
+@keyframes gift-wrap-shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.cart-gift-wrap.is-loading .cart-gift-wrap__inactive,
+.cart-gift-wrap.is-loading .cart-gift-wrap__form {
+  display: none !important;
+}
+
+.cart-gift-wrap.is-loading .cart-gift-wrap__skeleton {
+  display: block;
+}
+
+.cart-gift-wrap__checkbox,
+.gift-wrapping-pdp__checkbox {
+  accent-color: rgb(var(--color-button));
+  border: 1.5px solid rgba(var(--color-foreground), 0.4);
+  border-radius: var(--inputs-radius, 4px);
+  margin: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  position: relative;
+  top: 0.1rem;
+}
+
+.cart-gift-wrap__checkbox {
+  top: 6px;
+}
+
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media screen and (max-width: 749px) {
+  .cart-gift-wrap__actions {
+    flex-direction: column-reverse;
+  }
+
+  .cart-gift-wrap__cancel-btn,
+  .cart-gift-wrap__update-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

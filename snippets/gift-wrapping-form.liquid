@@ -1,0 +1,141 @@
+{% comment %}
+  Gift Wrapping Form - PDP Snippet
+
+  Per-product control (metafield overrides global setting):
+    - Global default : settings.gift_wrapping_enabled_by_default (Theme Editor)
+    - Per product    : product.metafields.gift_wrapping.enabled (boolean metafield)
+                       Set via Shopify Admin > Products > Metafields
+
+  Char limits (Theme Editor > Gift Wrapping):
+    - settings.gift_wrapping_to_max_length      (default 100)
+    - settings.gift_wrapping_from_max_length     (default 100)
+    - settings.gift_wrapping_message_max_length  (default 300)
+
+  Usage:
+    {% render 'gift-wrapping-form', product: product, section: section %}
+{% endcomment %}
+
+{%- if settings.gift_wrapping_product_handle != blank -%}
+
+  {%- comment -%} Per-product override: metafield takes priority over global setting {%- endcomment -%}
+  {%- assign gift_wrap_enabled = settings.gift_wrapping_enabled_by_default -%}
+  {%- if product.metafields.gift_wrapping.enabled != nil -%}
+    {%- assign gift_wrap_enabled = product.metafields.gift_wrapping.enabled -%}
+  {%- endif -%}
+
+  {%- if gift_wrap_enabled -%}
+    {%- assign gift_wrap_product = settings.gift_wrapping_product_handle -%}
+
+    {%- if gift_wrap_product != blank and gift_wrap_product.available -%}
+      {%- assign gift_wrap_variant = gift_wrap_product.selected_or_first_available_variant -%}
+
+      {%- assign to_max   = settings.gift_wrapping_to_max_length     | default: 100 -%}
+      {%- assign from_max = settings.gift_wrapping_from_max_length    | default: 100 -%}
+      {%- assign msg_max  = settings.gift_wrapping_message_max_length | default: 300 -%}
+
+      {{ 'gift-wrapping.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'gift-wrapping.js' | asset_url }}" defer="defer"></script>
+
+
+      <gift-wrapping-pdp
+        id="GiftWrapping-{{ section.id }}"
+        class="block mt-5"
+        data-gift-wrap-variant-id="{{ gift_wrap_variant.id }}"
+        data-section-id="{{ section.id }}"
+      >
+
+        <div class="tw:flex tw:items-center gift-wrapping-pdp__toggler">
+          <label class="tw:inline-flex tw:items-center tw:gap-3 tw:cursor-pointer tw:select-none" for="GiftWrappingToggle-{{ section.id }}">
+            <input
+              type="checkbox"
+              class="gift-wrapping-pdp__checkbox tw:w-4 tw:h-4 tw:cursor-pointer"
+              id="GiftWrappingToggle-{{ section.id }}"
+              aria-expanded="false"
+              aria-controls="GiftWrappingForm-{{ section.id }}"
+            >
+            <span class="">
+              {{- 'products.gift_wrapping.add_label' | t -}}
+            </span>
+            {%- if gift_wrap_variant.price > 0 -%}
+              <span class="tw:opacity-60">(+&nbsp;{{ gift_wrap_variant.price | money }})</span>
+            {%- else -%}
+              <span class="tw:opacity-60">{{- 'products.gift_wrapping.free' | t -}}</span>
+            {%- endif -%}
+          </label>
+        </div>
+
+        <div
+          class="gift-wrapping-pdp__form tw:mt-4 tw:space-y-4"
+          id="GiftWrappingForm-{{ section.id }}"
+          hidden
+          aria-hidden="true"
+        >
+
+          <div class="field">
+            <input
+              type="email"
+              id="GiftTo-{{ section.id }}"
+              class="field__input"
+              name="_gift_to"
+              autocomplete="email"
+              placeholder=" "
+              required
+              aria-required="true"
+              maxlength="{{ to_max }}"
+              data-char-max="{{ to_max }}"
+            >
+            <label class="field__label" for="GiftTo-{{ section.id }}">
+              {{- 'products.gift_wrapping.to_label' | t -}}
+            </label>
+            <span class="gw-char-count tw:block tw:text-right tw:text-xs tw:mt-1 tw:opacity-50" aria-live="polite">
+              {{- to_max -}} / {{- to_max -}}
+            </span>
+          </div>
+
+          <div class="field">
+            <input
+              type="email"
+              id="GiftFrom-{{ section.id }}"
+              class="field__input"
+              name="_gift_from"
+              autocomplete="email"
+              placeholder=" "
+              required
+              aria-required="true"
+              maxlength="{{ from_max }}"
+              data-char-max="{{ from_max }}"
+            >
+            <label class="field__label" for="GiftFrom-{{ section.id }}">
+              {{- 'products.gift_wrapping.from_label' | t -}}
+            </label>
+            <span class="gw-char-count tw:block tw:text-right tw:text-xs tw:mt-1 tw:opacity-50" aria-live="polite">
+              {{- from_max -}} / {{- from_max -}}
+            </span>
+          </div>
+
+          <div class="field">
+            <textarea
+              id="GiftMessage-{{ section.id }}"
+              class="field__input text-area text-area--resize-vertical"
+              name="_gift_message"
+              rows="3"
+              placeholder=" "
+              required
+              aria-required="true"
+              maxlength="{{ msg_max }}"
+              data-char-max="{{ msg_max }}"
+            ></textarea>
+            <label class="field__label" for="GiftMessage-{{ section.id }}">
+              {{- 'products.gift_wrapping.message_label' | t -}}
+            </label>
+            <span class="gw-char-count tw:block tw:text-right tw:text-xs tw:mt-1 tw:opacity-50" aria-live="polite">
+              {{- msg_max -}} / {{- msg_max -}}
+            </span>
+          </div>
+
+        </div>
+      </gift-wrapping-pdp>
+
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
