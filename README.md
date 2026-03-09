@@ -14,7 +14,6 @@ It adds a configurable gift wrapping form on the Product Detail Page (PDP) and a
 7. [CSS & Tailwind Setup](#css--tailwind-setup)
 8. [Warehouse / Order Visibility](#warehouse--order-visibility)
 9. [Setup Guide](#setup-guide)
-10. [Development Workflow](#development-workflow)
 
 ---
 
